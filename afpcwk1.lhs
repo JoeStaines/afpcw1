@@ -9,6 +9,7 @@ psyjs4@nottingham.ac.uk
 
 For flexibility, the size of the board is defined as a constant:
 
+> import List
 > size                  :: Int
 > size                  =  3
 
@@ -60,20 +61,33 @@ with the width and height of the board always being of the above size:
 
 > turnAux :: Int -> Int -> Player
 > turnAux x y 
->			| x == y 		= Nought
->			| otherwise 	= Cross 
+>			| x == y        = Nought
+>			| otherwise    = Cross 
 
-> winner :: Board -> Maybe Player
-> winner b 	| playerAmount Blank == 0 = Nothing
->			| otherwise = rcheck b
+--> winner :: Board -> Maybe Player
+--> winner b 	| playerAmount Blank == 0 = Nothing
+-->			| otherwise = rcheck b
 
-> rCheck [] = false
-> rCheck (b:bs) x = any rcheck2 b : rcheck bs
+--> rCheck [] = false
+--> rCheck (b:bs) x = any rcheck2 b : rcheck bs
 
-> rcheck2 (b:bs) p = 
+> winningState       :: Board -> Bool
+> winningState b     = all checkSame (rows b) ||
+>                              all checkSame (cols b)
 
-> wincheck :: Board -> Bool
-> wincheck b =  foldr (&&) True b
+-- TODO: add diagonal win state here 
+ 
+--> wincheck :: Board -> Bool
+--> wincheck b =  foldr (&&) True b
+
+> rows :: Board -> [[Player]]
+> rows = id
+
+> cols :: Board -> [[Player]]
+> cols = transpose
+
+> checkSame             :: Eq a => [a] -> Bool
+> checkSame (x:xs)   = and $ map (==x) (xs)
  
 
 --transpose gets cols, existing lists get rows
