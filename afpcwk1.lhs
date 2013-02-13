@@ -68,12 +68,14 @@ with the width and height of the board always being of the above size:
 >			| otherwise = rcheck b
 
 > rCheck [] = false
-> rCheck (b:bs) x = any rcheck2 b : rcheck bs
+> rCheck (b:bs) x = any longAssCheck b : rcheck bs
 
-> rcheck2 (b:bs) p = 
-
+> longAssCheck b
+	|((b !! 0) !! 0 == (b !! 0) !! 1 && (b !! 0) !! 1 == (b !! 0) !! 2) = True
+	|((b !! 1) !! 0 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 1) !! 2) = True
+	|((b !! 2) !! 0 == (b !! 2) !! 1 && (b !! 2) !! 1 == (b !! 2) !! 2) = True
 > wincheck :: Board -> Bool
-> wincheck b =  foldr (&&) True b
+> wincheck b = foldr (&&) True b
  
 
 --transpose gets cols, existing lists get rows
