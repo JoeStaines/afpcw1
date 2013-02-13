@@ -17,13 +17,13 @@ with the width and height of the board always being of the above size:
 
 > type Board            =  [[Player]]
 
-In turn, a player value is either a nought, a blank, or a cross, with
-a blank representing a space on the board that is not yet occupied:
+-- In turn, a player value is either a nought, a blank, or a cross, with
+-- a blank representing a space on the board that is not yet occupied:
 
 > data Player           =  Nought | Blank | Cross
 >                          deriving (Ord, Eq, Show)
 
-The following code displays a board on the screen:
+-- The following code displays a board on the screen:
 
 > showBoard             :: Board -> IO ()
 > showBoard             =  putStrLn . unlines . concat
