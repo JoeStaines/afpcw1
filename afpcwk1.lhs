@@ -48,3 +48,17 @@ with the width and height of the board always being of the above size:
 > separate x (y:ys)     =  y : x : separate x ys
 
 ----------------------------------------------------------------------
+
+> blankBoard :: Board
+> blankBoard = [[Blank, Blank, Blank], [Blank, Blank, Blank], [Blank, Blank, Blank]]
+
+> turn :: Board -> Player
+> turn xss = turnAux (playerAmount xss Cross) (playerAmount xss Nought)
+
+> playerAmount :: Board -> Player -> Int
+> playerAmount xss pl = length( filter (==pl) (concat xss))
+
+> turnAux :: Int -> Int -> Player
+> turnAux x y 
+>			| x == y 		= Nought
+>			| otherwise 	= Cross 
