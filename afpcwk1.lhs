@@ -63,10 +63,17 @@ with the width and height of the board always being of the above size:
 >			| x == y 		= Nought
 >			| otherwise 	= Cross 
 
-> winner :: Board -> maybe Player
-> winner b = if playerAmount blank \= 0 then wincheck b else nothing
+> winner :: Board -> Maybe Player
+> winner b 	| playerAmount Blank == 0 = Nothing
+>			| otherwise = rcheck b
+
+> rCheck [] = false
+> rCheck (b:bs) x = any rcheck2 b : rcheck bs
+
+> rcheck2 (b:bs) p = 
 
 > wincheck :: Board -> Bool
-> wincheck b = map and (map (== head xs) (tail xs)))
+> wincheck b =  foldr (&&) True b
+ 
 
 --transpose gets cols, existing lists get rows
