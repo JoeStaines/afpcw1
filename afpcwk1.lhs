@@ -63,19 +63,22 @@ with the width and height of the board always being of the above size:
 >			| x == y 		= Nought
 >			| otherwise 	= Cross 
 
-> winner :: Board -> Maybe Player
-> winner b 	| playerAmount Blank == 0 = Nothing
->			| otherwise = rcheck b
+--> winner :: Board -> Maybe Player
+--> winner b 	| playerAmount Blank == 0 = Nothing
+-->			| otherwise = rCheck b
 
-> rCheck [] = false
-> rCheck (b:bs) x = any longAssCheck b : rcheck bs
-
-> longAssCheck b
-	|((b !! 0) !! 0 == (b !! 0) !! 1 && (b !! 0) !! 1 == (b !! 0) !! 2) = True
-	|((b !! 1) !! 0 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 1) !! 2) = True
-	|((b !! 2) !! 0 == (b !! 2) !! 1 && (b !! 2) !! 1 == (b !! 2) !! 2) = True
-> wincheck :: Board -> Bool
-> wincheck b = foldr (&&) True b
- 
+--> rCheck [] _ = False
+--> rCheck b x = any longAssCheck b
+> win :: Board -> Bool
+> win b
+>	|((b !! 0) !! 0 == (b !! 0) !! 1 && (b !! 0) !! 1 == (b !! 0) !! 2) = True
+>	|((b !! 1) !! 0 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 1) !! 2) = True
+>	|((b !! 2) !! 0 == (b !! 2) !! 1 && (b !! 2) !! 1 == (b !! 2) !! 2) = True
+>	|((b !! 0) !! 0 == (b !! 1) !! 0 && (b !! 1) !! 0 == (b !! 2) !! 0) = True
+>	|((b !! 0) !! 1 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 2) !! 1) = True
+>	|((b !! 0) !! 2 == (b !! 1) !! 2 && (b !! 1) !! 2 == (b !! 2) !! 2) = True
+>	|((b !! 0) !! 0 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 2) !! 2) = True
+>	|((b !! 0) !! 2 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 2) !! 0) = True
+>	|otherwise = False
 
 --transpose gets cols, existing lists get rows
