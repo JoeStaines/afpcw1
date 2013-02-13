@@ -62,3 +62,11 @@ with the width and height of the board always being of the above size:
 > turnAux x y 
 >			| x == y 		= Nought
 >			| otherwise 	= Cross 
+
+> winner :: Board -> maybe Player
+> winner b = if playerAmount blank \= 0 then wincheck b else nothing
+
+> wincheck :: Board -> Bool
+> wincheck b = map and (map (== head xs) (tail xs)))
+
+--transpose gets cols, existing lists get rows
