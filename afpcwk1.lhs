@@ -1,7 +1,9 @@
 G52AFP Coursework 1 - Noughts and crosses
    
-Your full name(s)
-Your full email address(es)
+James Key
+psyjpk@nottingham.ac.uk
+Joe Staines
+psyjs4@nottingham.ac.uk
 
 ----------------------------------------------------------------------
 
