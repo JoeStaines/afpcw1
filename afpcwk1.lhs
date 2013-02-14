@@ -89,5 +89,16 @@ with the width and height of the board always being of the above size:
 > checkSame             :: Eq a => [a] -> Bool
 > checkSame (x:xs)   = and $ map (==x) (xs)
  
+> win :: Board -> Bool
+> win b
+>	|((b !! 0) !! 0 == (b !! 0) !! 1 && (b !! 0) !! 1 == (b !! 0) !! 2) = True
+>	|((b !! 1) !! 0 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 1) !! 2) = True
+>	|((b !! 2) !! 0 == (b !! 2) !! 1 && (b !! 2) !! 1 == (b !! 2) !! 2) = True
+>	|((b !! 0) !! 0 == (b !! 1) !! 0 && (b !! 1) !! 0 == (b !! 2) !! 0) = True
+>	|((b !! 0) !! 1 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 2) !! 1) = True
+>	|((b !! 0) !! 2 == (b !! 1) !! 2 && (b !! 1) !! 2 == (b !! 2) !! 2) = True
+>	|((b !! 0) !! 0 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 2) !! 2) = True
+>	|((b !! 0) !! 2 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 2) !! 0) = True
+>	|otherwise = False
 
 --transpose gets cols, existing lists get rows
