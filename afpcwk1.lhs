@@ -73,7 +73,8 @@ with the width and height of the board always being of the above size:
 
 > winningState       :: Board -> Bool
 > winningState b     = all checkSame (rows b) ||
->                              all checkSame (cols b)
+>                              all checkSame (cols b) ||
+>									all checkSame (diags b)
 
 -- TODO: add diagonal win state here 
  
@@ -86,13 +87,8 @@ with the width and height of the board always being of the above size:
 > cols :: Board -> [[Player]]
 > cols = transpose
 
-> diag1 :: Board -> [Player]
-> diag1 b = [grabSquare b x x | x <- [0..((length b)-1)]]
-> diag2 :: Board -> [Player]
-> diag2 b = [grabSquare b x (((length b) - x)-1) | x <- [0..((length b)-1)]]
-
-> grabSquare :: Board -> Int -> Int -> Player
-> grabSquare b x y = (b !! x) !! y
+> diags :: Board -> [[Player]]
+> diags b = [[(b !! x) !! x | x <- [0..((length b)-1)]], [(b !! x) !! (((length b) - x)-1) | x <- [0..((length b)-1)]]]
 
 > checkSame             :: Eq a => [a] -> Bool
 > checkSame (x:xs)   = and $ map (==x) (xs)
