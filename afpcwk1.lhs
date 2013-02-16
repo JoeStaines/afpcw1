@@ -62,21 +62,12 @@ with the width and height of the board always being of the above size:
 > turnAux :: Int -> Int -> Player
 > turnAux x y 
 >			| x == y        = Nought
->			| otherwise    = Cross 
-
---> winner :: Board -> Maybe Player
---> winner b 	| playerAmount Blank == 0 = Nothing
--->			| otherwise = rcheck b
-
---> rCheck [] = false
---> rCheck (b:bs) x = any rcheck2 b : rcheck bs
+>			| otherwise    	= Cross 
 
 > winningState       :: Board -> Bool
 > winningState b     = all checkSame (rows b) ||
 >                              all checkSame (cols b) ||
 >									all checkSame (diags b)
-
--- TODO: add diagonal win state here 
  
 --> wincheck :: Board -> Bool
 --> wincheck b =  foldr (&&) True b
@@ -88,7 +79,7 @@ with the width and height of the board always being of the above size:
 > cols = transpose
 
 > diags :: Board -> [[Player]]
-> diags b = [[(b !! x) !! x | x <- [0..((length b)-1)]], [(b !! x) !! (((length b) - x)-1) | x <- [0..((length b)-1)]]]
+> diags b = [[(b !! x) !! x | x <- [0..(size-1)]], [(b !! x) !! (((length b) - x)-1) | x <- [0..(size-1)]]]
 
 > checkSame             :: Eq a => [a] -> Bool
 > checkSame (x:xs)   = and $ map (==x) (xs)
