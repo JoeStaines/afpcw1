@@ -68,9 +68,6 @@ with the width and height of the board always being of the above size:
 > winningState b     = all checkSame (rows b) ||
 >                              all checkSame (cols b) ||
 >									all checkSame (diags b)
- 
---> wincheck :: Board -> Bool
---> wincheck b =  foldr (&&) True b
 
 > rows :: Board -> [[Player]]
 > rows = id
