@@ -3,7 +3,7 @@ G52AFP Coursework 1 - Noughts and crosses
 James Key
 psyjpk@nottingham.ac.uk
 Joe Staines
-psyjs4@nottingham.ac.uk
+psyjs2@nottingham.ac.uk
 
 ----------------------------------------------------------------------
 
