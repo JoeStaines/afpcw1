@@ -54,6 +54,12 @@ with the width and height of the board always being of the above size:
 > blankBoard :: Board
 > blankBoard = [[Blank, Blank, Blank], [Blank, Blank, Blank], [Blank, Blank, Blank]]
 
+> noughtWinDiag :: Board
+> noughtWinDiag = [[Blank, Blank, Nought], [Blank, Nought, Blank], [Nought, Cross, Blank]]
+
+> noughtWinRow :: Board
+> noughtWinRow = [[Nought, Nought, Nought], [Blank, Cross, Blank], [Blank, Cross, Nought]]
+
 > turn :: Board -> Player
 > turn xss = turnAux (playerAmount xss Cross) (playerAmount xss Nought)
 
@@ -79,8 +85,10 @@ with the width and height of the board always being of the above size:
 > diags :: Board -> [[Player]]
 > diags b = [[(b !! x) !! x | x <- [0..(size-1)]], [(b !! x) !! (((length b) - x)-1) | x <- [0..(size-1)]]]
 
-> checkSame         :: Eq a => [a] -> Bool
-> checkSame (x:xs)   = and $ map (==x) (xs)
+> checkSame             :: [Player] -> Bool
+> checkSame (x:xs)	
+>						| x == Blank 	= False
+> 						| otherwise 	= (and $ map (==x) (xs))
 
 
 > move :: Board -> IO Int -> Board
@@ -99,7 +107,7 @@ with the width and height of the board always being of the above size:
 >				| otherwise	= c: repl2 b cs (x - 1)
 
 
-		((ord getChar) - 48)
+--((ord getChar) - 48)
 
 > play :: Board -> IO Board
 > play b = do
