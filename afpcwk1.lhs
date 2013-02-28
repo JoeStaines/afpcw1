@@ -10,6 +10,7 @@ psyjs2@nottingham.ac.uk
 For flexibility, the size of the board is defined as a constant:
 
 > import Data.List
+> import Data.Char
 > size                  :: Int
 > size                  =  3
 
@@ -64,10 +65,10 @@ with the width and height of the board always being of the above size:
 >			| x == y        = Nought
 >			| otherwise    	= Cross 
 
-> winningState       :: Board -> Bool
-> winningState b     = all checkSame (rows b) ||
->                              all checkSame (cols b) ||
->									all checkSame (diags b)
+> winState       :: Board -> Bool
+> winState b     = 	any checkSame (rows b) ||
+>					any checkSame (cols b) ||
+>					any checkSame (diags b)
 
 > rows :: Board -> [[Player]]
 > rows = id
@@ -78,19 +79,37 @@ with the width and height of the board always being of the above size:
 > diags :: Board -> [[Player]]
 > diags b = [[(b !! x) !! x | x <- [0..(size-1)]], [(b !! x) !! (((length b) - x)-1) | x <- [0..(size-1)]]]
 
-> checkSame             :: Eq a => [a] -> Bool
+> checkSame         :: Eq a => [a] -> Bool
 > checkSame (x:xs)   = and $ map (==x) (xs)
- 
-> win :: Board -> Bool
-> win b
->	|((b !! 0) !! 0 == (b !! 0) !! 1 && (b !! 0) !! 1 == (b !! 0) !! 2) = True
->	|((b !! 1) !! 0 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 1) !! 2) = True
->	|((b !! 2) !! 0 == (b !! 2) !! 1 && (b !! 2) !! 1 == (b !! 2) !! 2) = True
->	|((b !! 0) !! 0 == (b !! 1) !! 0 && (b !! 1) !! 0 == (b !! 2) !! 0) = True
->	|((b !! 0) !! 1 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 2) !! 1) = True
->	|((b !! 0) !! 2 == (b !! 1) !! 2 && (b !! 1) !! 2 == (b !! 2) !! 2) = True
->	|((b !! 0) !! 0 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 2) !! 2) = True
->	|((b !! 0) !! 2 == (b !! 1) !! 1 && (b !! 1) !! 1 == (b !! 2) !! 0) = True
->	|otherwise = False
 
---transpose gets cols, existing lists get rows
+
+> move :: Board -> IO Int -> Board
+> move b x = repl b x
+
+> repl :: Board -> IO Int -> Board
+> repl [] x = []
+> repl (b:bs) x
+>				| x `div` size == 0 = repl2 (b:bs) b (x `mod` size): repl bs (x - size)
+>				| otherwise			= b: repl bs (x - size)
+
+> repl2 :: Board -> [Player] -> Int -> [Player]
+> repl2 b [] x = []
+> repl2 b (c:cs) x
+>				| x == 0 	= turn b : repl2 b cs (x - 1)
+>				| otherwise	= c: repl2 b cs (x - 1)
+
+
+		((ord getChar) - 48)
+
+> play :: Board -> IO Board
+> play b = do
+>			showBoard b
+>			play (move b ask)
+
+> ask :: IO Int
+> ask = do
+>			putStr "Where do you want to move (0-8)? "
+>			n <- getLine
+>			return (read n :: Int)
+
+-->			(ord getChar) - 48
