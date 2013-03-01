@@ -117,7 +117,7 @@ with the width and height of the board always being of the above size:
 > ask :: IO Int
 > ask = do
 >			putStr "Where do you want to move (0-8)? "
->			n <- getLine
->			return (read n :: Int)
+>			n <- getChar
+>			return (ord n)
 
 -->			(ord getChar) - 48
