@@ -114,9 +114,13 @@ with the width and height of the board always being of the above size:
 > 	where 
 > 		loop board = do
 > 			showBoard board
->			putStr "Where do you want to move (0-8)? "
-> 			n <- readLn
->			loop (move board n)
+>			if (winState board) 
+>				then
+>					putStr "winner" 
+>				else
+>					do 	putStrLn "Where do you want to move (0-8)? "
+> 						n <- readLn
+>			 			(loop (move board n))
 
 
 --> play :: Board -> IO Board
