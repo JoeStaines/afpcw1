@@ -91,10 +91,10 @@ with the width and height of the board always being of the above size:
 > 						| otherwise 	= (and $ map (==x) (xs))
 
 
-> move :: Board -> IO Int -> Board
+> move :: Board -> Int -> Board
 > move b x = repl b x
 
-> repl :: Board -> IO Int -> Board
+> repl :: Board -> Int -> Board
 > repl [] x = []
 > repl (b:bs) x
 >				| x `div` size == 0 = repl2 (b:bs) b (x `mod` size): repl bs (x - size)
@@ -109,15 +109,25 @@ with the width and height of the board always being of the above size:
 
 --((ord getChar) - 48)
 
-> play :: Board -> IO Board
-> play b = do
->			showBoard b
->			play (move b ask)
-
-> ask :: IO Int
-> ask = do
+> mainloop :: IO ()
+> mainloop = loop blankBoard
+> 	where 
+> 		loop board = do
+> 			showBoard board
 >			putStr "Where do you want to move (0-8)? "
->			n <- getLine
->			return (read n::Int)
+> 			n <- readLn
+>			loop (move board n)
+
+
+--> play :: Board -> IO Board
+--> play b = do
+-->			showBoard b
+-->			play (ask b)
+
+--> ask :: Board -> IO Board
+--> ask b = do
+-->			putStr "Where do you want to move (0-8)? "
+-->			n <- readLn
+-->			return (move b n)
 
 -->			(ord getChar) - 48
