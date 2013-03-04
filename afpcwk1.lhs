@@ -92,20 +92,19 @@ with the width and height of the board always being of the above size:
 
 
 > move :: Board -> Int -> Board
-> move b x = repl b x
+> move b x = repl b b x
 
-> repl :: Board -> Int -> Board
-> repl [] x = []
-> repl (b:bs) x
->				| x `div` size == 0 = repl2 (b:bs) b (x `mod` size): repl bs (x - size)
->				| otherwise			= b: repl bs (x - size)
+> repl :: Board -> Board -> Int -> Board
+> repl _ [] x = []
+> repl st (b:bs) x
+>				| x `div` size == 0 = repl2 st b (x `mod` size): bs
+>				| otherwise			= b: repl st bs (x - size)
 
 > repl2 :: Board -> [Player] -> Int -> [Player]
 > repl2 b [] x = []
 > repl2 b (c:cs) x
->				| x == 0 	= turn b : repl2 b cs (x - 1)
+>				| x == 0 	= turn b : cs
 >				| otherwise	= c: repl2 b cs (x - 1)
-
 
 --((ord getChar) - 48)
 
