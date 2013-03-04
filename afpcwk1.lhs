@@ -92,8 +92,10 @@ with the width and height of the board always being of the above size:
 
 
 > move :: Board -> Int -> Board
-> move b x = repl b b x
-
+> move b x 
+>	| (concat b !! x) == Blank = repl b b x
+>	| otherwise = b
+	
 > repl :: Board -> Board -> Int -> Board
 > repl _ [] x = []
 > repl st (b:bs) x
