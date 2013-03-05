@@ -108,7 +108,14 @@ with the width and height of the board always being of the above size:
 >				| x == 0 	= turn b : cs
 >				| otherwise	= c: repl2 b cs (x - 1)
 
---((ord getChar) - 48)
+> dumbAIMove :: Board -> Board
+> dumbAIMove b = move b (aiInput $ concat b)
+
+> aiInput :: [Player] -> Int
+> aiInput [] = 0
+> aiInput (x:xs)
+> 			| x == Blank =  0
+> 			| otherwise =  1 + aiInput xs
 
 > mainloop :: IO ()
 > mainloop = loop blankBoard
@@ -118,10 +125,17 @@ with the width and height of the board always being of the above size:
 >			if (winState board) 
 >				then
 >					putStr "winner" 
->				else
->					do 	putStrLn "Where do you want to move (0-8)? "
-> 						n <- readLn
->			 			(loop (move board n))
+>				else	
+>					case (turn board) of 
+>						Nought 	-> getAIInput board
+>						Cross 	-> getUserInput board
+>		getUserInput board = do
+>			putStrLn "Where do you want to move (0-8)? "
+> 			n <- readLn
+>			(loop (move board n))
+>		getAIInput board = do
+>			putStrLn "AI's turn"
+>			(loop (dumbAIMove board))
 
 
 --> play :: Board -> IO Board
