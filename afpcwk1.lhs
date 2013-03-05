@@ -137,6 +137,11 @@ with the width and height of the board always being of the above size:
 >			putStrLn "AI's turn"
 >			(loop (dumbAIMove board))
 
+> data Tree a = Node a [Tree a]
+
+> states :: Board -> Tree Board [Tree] deriving (Show)
+> states b = Node b [Node (move b x) [] | x <- [0 .. ((size*size)-1)]]
+
 
 --> play :: Board -> IO Board
 --> play b = do
