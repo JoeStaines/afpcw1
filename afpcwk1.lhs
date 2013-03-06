@@ -57,8 +57,17 @@ with the width and height of the board always being of the above size:
 > noughtWinDiag :: Board
 > noughtWinDiag = [[Blank, Blank, Nought], [Blank, Nought, Blank], [Nought, Cross, Blank]]
 
+> noughtAlmostDiag :: Board
+> noughtAlmostDiag = [[Blank, Blank, Nought], [Cross, Nought, Cross], [Blank, Cross, Nought]]
+
 > noughtWinRow :: Board
 > noughtWinRow = [[Nought, Nought, Nought], [Blank, Cross, Blank], [Blank, Cross, Nought]]
+
+> drawBoard :: Board
+> drawBoard = [[Nought, Cross, Nought],[Nought, Cross, Cross],[Cross, Nought, Nought]]
+
+> halfWayBoard :: Board
+> halfWayBoard = [[Nought, Cross, Nought],[Cross, Blank, Blank],[Blank, Blank, Blank]]
 
 > turn :: Board -> Player
 > turn xss = turnAux (playerAmount xss Cross) (playerAmount xss Nought)
@@ -75,6 +84,18 @@ with the width and height of the board always being of the above size:
 > winState b     = 	any checkSame (rows b) ||
 >					any checkSame (cols b) ||
 >					any checkSame (diags b)
+
+> checkDraw :: Board -> Bool
+> checkDraw b
+> 		| (blankSpots b == [] && winState b == False) 	= True
+> 		| otherwise										= False
+
+> winner :: Board -> Player
+> winner b = negatePlayer (turn b)
+
+> negatePlayer :: Player -> Player
+> negatePlayer Cross = Nought
+> negatePlayer _ = Cross
 
 > rows :: Board -> [[Player]]
 > rows = id
@@ -137,11 +158,41 @@ with the width and height of the board always being of the above size:
 >			putStrLn "AI's turn"
 >			(loop (dumbAIMove board))
 
-> data Tree a = Node a [Tree a]
+> data Tree a = Node a [Tree a] deriving (Show)
 
-> states :: Board -> Tree Board [Tree] deriving (Show)
-> states b = Node b [Node (move b x) [] | x <- [0 .. ((size*size)-1)]]
+> states :: Board -> Tree Board
+> states b 
+>	| (winState b || checkDraw b) 	= Node b []
+> 	| otherwise 					= Node b [states (move b x) | x <- blankSpots b]
 
+
+> blankSpots :: Board -> [Int]
+> blankSpots b = [ snd p | p <- (zip (concat b) [0..]),  fst p == Blank]
+
+> treeCount :: Tree a -> Int
+> treeCount (Node _ []) = 0
+> treeCount (Node _ xs) = 1 + sum (map treeCount xs)
+
+
+
+--> treeWinner :: Tree Board -> (Player, Int)
+--> treeWinner (Node b []) = (minimax b,0)
+--> treeWinner (Node b xs) = head $ filter ((==(turn b)).fst) getAllNodes
+-->		where
+-->			getAllNodes = (map treeWinner xs)
+
+> treeWinner :: Tree Board -> (Player, Int)
+> treeWinner (Node b []) = (minimax b,0)
+> treeWinner (Node b xs) 
+>		| turn b == Cross = -- Get Max
+>		| turn b == Nought = -- Get Min
+
+> minimax :: Board -> Player
+> minimax b
+> 	| winState b = winner b
+>	| otherwise = Blank
+
+> main =  print $ treeCount (states blankBoard)
 
 --> play :: Board -> IO Board
 --> play b = do
