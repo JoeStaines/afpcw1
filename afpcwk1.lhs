@@ -146,10 +146,10 @@ with the width and height of the board always being of the above size:
 > 			showBoard board
 >			if (winState board) 
 >				then
->					putStrLn "winner!" 
+>					putStrLn  ((show (winner board)) ++  " wins!")
 >				else if (checkDraw board)
 >					then 
->						putStrLn "draw"
+>						putStrLn "It's a draw!"
 >					else
 >						case (turn board) of 
 >							Nought 	-> getAIInput board
