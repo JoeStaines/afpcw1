@@ -11,6 +11,7 @@ For flexibility, the size of the board is defined as a constant:
 
 > import Data.List
 > import Data.Char
+> import Data.Ord
 > size                  :: Int
 > size                  =  3
 
@@ -67,7 +68,7 @@ with the width and height of the board always being of the above size:
 > drawBoard = [[Nought, Cross, Nought],[Nought, Cross, Cross],[Cross, Nought, Nought]]
 
 > halfWayBoard :: Board
-> halfWayBoard = [[Nought, Cross, Nought],[Cross, Blank, Blank],[Blank, Blank, Blank]]
+> halfWayBoard = [[Nought, Blank, Blank],[Cross, Cross, Nought],[Cross, Nought, Blank]]
 
 > turn :: Board -> Player
 > turn xss = turnAux (playerAmount xss Cross) (playerAmount xss Nought)
@@ -145,26 +146,36 @@ with the width and height of the board always being of the above size:
 > 			showBoard board
 >			if (winState board) 
 >				then
->					putStr "winner" 
->				else	
->					case (turn board) of 
->						Nought 	-> getAIInput board
->						Cross 	-> getUserInput board
+>					putStrLn "winner!" 
+>				else if (checkDraw board)
+>					then 
+>						putStrLn "draw"
+>					else
+>						case (turn board) of 
+>							Nought 	-> getAIInput board
+>							Cross 	-> getUserInput board
 >		getUserInput board = do
 >			putStrLn "Where do you want to move (0-8)? "
 > 			n <- readLn
 >			(loop (move board n))
 >		getAIInput board = do
 >			putStrLn "AI's turn"
->			(loop (dumbAIMove board))
+>			(loop (grabBoard (growTreeOne board) (correctBoardIndex board)))
 
 > data Tree a = Node a [Tree a] deriving (Show)
 
-> states :: Board -> Tree Board
-> states b 
+> growTreeAll :: Board -> Tree Board
+> growTreeAll b 
 >	| (winState b || checkDraw b) 	= Node b []
-> 	| otherwise 					= Node b [states (move b x) | x <- blankSpots b]
+> 	| otherwise 					= Node b [growTreeAll (move b x) | x <- blankSpots b]
 
+> growTreeOne :: Board -> Tree Board
+> growTreeOne b = Node b [Node (move b x) [] | x <- blankSpots b]
+
+> grabBoard :: Tree Board -> Int -> Board
+> grabBoard (Node _ xs) i = getB $ xs !! i
+>	where
+>		getB (Node b _) = b
 
 > blankSpots :: Board -> [Int]
 > blankSpots b = [ snd p | p <- (zip (concat b) [0..]),  fst p == Blank]
@@ -181,18 +192,37 @@ with the width and height of the board always being of the above size:
 -->		where
 -->			getAllNodes = (map treeWinner xs)
 
+
 > treeWinner :: Tree Board -> (Player, Int)
 > treeWinner (Node b []) = (minimax b,0)
 > treeWinner (Node b xs) 
->		| turn b == Cross = -- Get Max
->		| turn b == Nought = -- Get Min
+>		| turn b == Cross = head $ maxTuple $ reZip getAllNodes
+>		| turn b == Nought = head $ minTuple $ reZip getAllNodes
+>			where
+>				getAllNodes = (map treeWinner xs)
+
+> correctBoardIndex :: Board -> Int
+> correctBoardIndex = snd . treeWinner . growTreeAll
+
+> reZip :: [(Player,Int)] -> [(Player,Int)]
+> reZip xs = zip (fstList xs) [0..]
+
+> fstList :: [(a,b)] -> [a]
+> fstList xs = map fst xs
+
 
 > minimax :: Board -> Player
 > minimax b
 > 	| winState b = winner b
 >	| otherwise = Blank
 
-> main =  print $ treeCount (states blankBoard)
+> minTuple :: [(Player,Int)] -> [(Player,Int)]
+> minTuple xs = sortBy (comparing fst) xs
+
+> maxTuple :: [(Player,Int)] -> [(Player,Int)]
+> maxTuple = reverse . minTuple
+
+> main =  mainloop
 
 --> play :: Board -> IO Board
 --> play b = do
