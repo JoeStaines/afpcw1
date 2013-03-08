@@ -13,20 +13,20 @@ For flexibility, the size of the board is defined as a constant:
 > import Data.Char
 > import Data.Ord
 > size                  :: Int
-> size                  =  3
+> size                  =  4
 
 The board itself is represented as a list of list of player values,
 with the width and height of the board always being of the above size:
 
 > type Board            =  [[Player]]
 
--- In turn, a player value is either a nought, a blank, or a cross, with
--- a blank representing a space on the board that is not yet occupied:
+In turn, a player value is either a nought, a blank, or a cross, with
+a blank representing a space on the board that is not yet occupied:
 
 > data Player           =  Nought | Blank | Cross
 >                          deriving (Ord, Eq, Show)
 
--- The following code displays a board on the screen:
+The following code displays a board on the screen:
 
 > showBoard             :: Board -> IO ()
 > showBoard             =  putStrLn . unlines . concat
@@ -53,7 +53,7 @@ with the width and height of the board always being of the above size:
 ----------------------------------------------------------------------
 
 > blankBoard :: Board
-> blankBoard = [[Blank, Blank, Blank], [Blank, Blank, Blank], [Blank, Blank, Blank]]
+> blankBoard = replicate size (replicate size Blank)
 
 > noughtWinDiag :: Board
 > noughtWinDiag = [[Blank, Blank, Nought], [Blank, Nought, Blank], [Nought, Cross, Blank]]
