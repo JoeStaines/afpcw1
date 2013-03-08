@@ -155,7 +155,7 @@ The following code displays a board on the screen:
 >							Nought 	-> getAIInput board
 >							Cross 	-> getUserInput board
 >		getUserInput board = do
->			putStrLn "Where do you want to move (0-8)? "
+>			putStrLn ("Where do you want to move (0-" ++ (show((size * size)-1)) ++ ")? ")
 > 			n <- readLn
 >			(loop (move board n))
 >		getAIInput board = do
